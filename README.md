@@ -1,9 +1,10 @@
-# Otohits API - C#
+# Otohits API - C&#35;
 
 C# implementation of the Otohits API (http://docs.otohitsapi.apiary.io).
 
 ## Quick start
 You can use the Otohits.API.TestConsole project to play with the API.
+
 Add your API Key/Secret in the `App.Config` file:
 
 ```xml
@@ -32,7 +33,9 @@ var user = new OtohitsRequest().GetUserInfo();
 
 #### Using a custom call
 Most of the services are directly mapped into `OtohitsRequest`, but if you need to make a specific request, you can use `Get` or `Post` methods.
+
 Both can retrieve either a JSON string or a POCO object (JSON deserialize).
+
 Basic `Get` and `Post` also have Async() methods.
 
 You can use the POCO object if available
