@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Otohits.API", "Otohits.API\Otohits.API.csproj", "{EBAF140B-9CF9-46CA-B229-19FE0ED617D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Otohits.API.TestConsole", "Otohits.API.TestConsole\Otohits.API.TestConsole.csproj", "{0CD03E52-D91B-44BD-A773-181D959A0B91}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EBAF140B-9CF9-46CA-B229-19FE0ED617D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBAF140B-9CF9-46CA-B229-19FE0ED617D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBAF140B-9CF9-46CA-B229-19FE0ED617D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBAF140B-9CF9-46CA-B229-19FE0ED617D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CD03E52-D91B-44BD-A773-181D959A0B91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CD03E52-D91B-44BD-A773-181D959A0B91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CD03E52-D91B-44BD-A773-181D959A0B91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CD03E52-D91B-44BD-A773-181D959A0B91}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
