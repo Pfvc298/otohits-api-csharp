@@ -19,7 +19,7 @@ Launch the Console App and... That's it! You should get your account info.
 
 ## How to use
 
-Set your credentials once to make all furthers request
+Set your credentials once to make all further requests
 ```cs
 OtohitsRequest.SetCredentials("yourApiKey", "yourSecret");
 ```
