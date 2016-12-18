@@ -32,11 +32,11 @@ var user = new OtohitsRequest().GetUserInfo();
 ```
 
 #### Using a custom call
-Most of the services are directly mapped into `OtohitsRequest`, but if you need to make a specific request, you can use `Get`, `Post`, `PUT` and `DELETE` methods.
+Most of the services are directly mapped into `OtohitsRequest`, but if you need to make a specific request, you can use `Get`, `Post`, `Put` and `Delete` methods.
 
 Both can retrieve either a JSON string or a POCO object (JSON deserialize).
 
-Basic `Get`, `Post`, `PUT` and `DELETE` methods also have Async() methods.
+Basic `Get`, `Post`, `Put` and `Delete` methods also have Async() methods.
 
 You can use the POCO object if available
 ```cs
