@@ -20,6 +20,7 @@ namespace Otohits.API
 
         private static OtohitsApiCredentials Credentials { get; set; }
 
+        #region Request/Security methods
         /// <summary>
         /// Set the credentials for all the Otohits requests in this session
         /// </summary>
@@ -93,7 +94,9 @@ namespace Otohits.API
             return path.StartsWith(ApiUrl) ? path : ApiUrl + path;
         }
 
+        #endregion
 
+        #region GET
         /// <summary>
         /// Basic GET request on the API, can be used to retreive any service result as json string
         /// </summary>
@@ -173,7 +176,9 @@ namespace Otohits.API
             var requestResult = await GetAsync(path).ConfigureAwait(false);
             return JsonConvert.DeserializeObject<T>(requestResult);
         }
+        #endregion
 
+        #region POST
         /// <summary>
         /// Basic POST request on the API, can be used to retreive any service result as json string
         /// </summary>
@@ -216,9 +221,9 @@ namespace Otohits.API
         /// <param name="path">Relative url to request</param>
         /// <param name="data">Data to send to the service</param>
         /// <returns>Typed object response</returns>
-        public T Post<T>(string path, string data)
+        public T Post<T>(string path, object data)
         {
-            var requestResult = Post(path, data);
+            var requestResult = Post(path, JsonConvert.SerializeObject(data));
             return JsonConvert.DeserializeObject<T>(requestResult);
         }
 
@@ -261,7 +266,7 @@ namespace Otohits.API
         }
 
         /// <summary>
-        /// GET data to the API - async
+        /// POST data to the API - async
         /// </summary>
         /// <typeparam name="T">Type of object to get back from the API</typeparam>
         /// <param name="path">Relative url to request</param>
@@ -272,12 +277,233 @@ namespace Otohits.API
             var requestResult = await PostAsync(path, data).ConfigureAwait(false);
             return JsonConvert.DeserializeObject<T>(requestResult);
         }
+        #endregion
 
+        #region PUT
+        /// <summary>
+        /// Basic PUT request on the API, can be used to retreive any service result as json string
+        /// </summary>
+        /// <param name="path">Relative url to request</param>
+        /// <param name="data">Data to send to the service</param>
+        /// <returns>Json string of the result</returns>
+        public string Put(string path, string data)
+        {
+            try
+            {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(GetApiUrl(path));
+                request.ContentType = "application/json";
+                request.Method = "PUT";
+                request.Headers.Add(HttpRequestHeader.Authorization, GetAuthorizationHeader(path, "PUT").ToString());
+                request.ContentLength = data.Length;
+                using (var sr = new StreamWriter(request.GetRequestStream()))
+                {
+                    sr.Write(data);
+                }
+
+                using (var response = request.GetResponse())
+                using (var sr = new StreamReader(response.GetResponseStream()))
+                {
+                    return sr.ReadToEnd();
+                }
+            }
+            catch (WebException ex)
+            {
+                using (var er = ex.Response.GetResponseStream())
+                using (var erRs = new StreamReader(er))
+                {
+                    return erRs.ReadToEnd();
+                }
+            }
+        }
+
+        /// <summary>
+        /// PUT data to the API - async
+        /// </summary>
+        /// <param name="path">Relative url to request</param>
+        /// <param name="data">Data to send to the service</param>
+        /// <returns>Typed object response</returns>
+        public T Put<T>(string path, object data)
+        {
+            var requestResult = Put(path, JsonConvert.SerializeObject(data));
+            return JsonConvert.DeserializeObject<T>(requestResult);
+        }
+
+        /// <summary>
+        /// PUT data to the API - async
+        /// </summary>
+        /// <typeparam name="T">Type of object to get back from the API</typeparam>
+        /// <param name="path">Relative url to request</param>
+        /// <param name="data">Data to send to the service</param>
+        /// <returns>Json string of the result</returns>
+        public async Task<string> PutAsync(string path, string data)
+        {
+            try
+            {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(GetApiUrl(path));
+                request.ContentType = "application/json";
+                request.Method = "PUT";
+                request.Headers.Add(HttpRequestHeader.Authorization, GetAuthorizationHeader(path, "PUT").ToString());
+                request.ContentLength = data.Length;
+
+                using (var sr = new StreamWriter(await request.GetRequestStreamAsync().ConfigureAwait(false)))
+                {
+                    sr.Write(data);
+                }
+
+                using (var response = await request.GetResponseAsync().ConfigureAwait(false))
+                using (var sr = new StreamReader(response.GetResponseStream()))
+                {
+                    return sr.ReadToEnd();
+                }
+            }
+            catch (WebException ex)
+            {
+                using (var er = ex.Response.GetResponseStream())
+                using (var erRs = new StreamReader(er))
+                {
+                    return erRs.ReadToEnd();
+                }
+            }
+        }
+
+        /// <summary>
+        /// PUT data to the API - async
+        /// </summary>
+        /// <typeparam name="T">Type of object to get back from the API</typeparam>
+        /// <param name="path">Relative url to request</param>
+        /// <param name="data">Data to send to the service</param>
+        /// <returns>Typed object response</returns>
+        public async Task<T> PutAsync<T>(string path, string data)
+        {
+            var requestResult = await PutAsync(path, data).ConfigureAwait(false);
+            return JsonConvert.DeserializeObject<T>(requestResult);
+        }
+        #endregion
+
+        #region DELETE
+        /// <summary>
+        /// Basic DELETE request on the API, can be used to retreive any service result as json string
+        /// </summary>
+        /// <param name="path">Relative url to request</param>
+        /// <param name="data">Data to send to the service</param>
+        /// <returns>Json string of the result</returns>
+        public string Delete(string path)
+        {
+            try
+            {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(GetApiUrl(path));
+                request.ContentType = "application/json";
+                request.Method = "DELETE";
+                request.Headers.Add(HttpRequestHeader.Authorization, GetAuthorizationHeader(path, "DELETE").ToString());
+
+                using (var response = request.GetResponse())
+                using (var sr = new StreamReader(response.GetResponseStream()))
+                {
+                    string result = sr.ReadToEnd();
+                    //Delete response (204) returns no content, creating a basic ApiResponse if it's the case
+                    if (string.IsNullOrEmpty(result))
+                        return JsonConvert.SerializeObject(new ApiResponse { IsSuccess = true });
+                    return result;
+                }
+            }
+            catch (WebException ex)
+            {
+                using (var er = ex.Response.GetResponseStream())
+                using (var erRs = new StreamReader(er))
+                {
+                    return erRs.ReadToEnd();
+                }
+            }
+        }
+
+        /// <summary>
+        /// DELETE data to the API - async
+        /// </summary>
+        /// <param name="path">Relative url to request</param>
+        /// <param name="data">Data to send to the service</param>
+        /// <returns>Typed object response</returns>
+        public T Delete<T>(string path)
+        {
+            var requestResult = Delete(path);
+            return JsonConvert.DeserializeObject<T>(requestResult);
+        }
+
+        /// <summary>
+        /// DELETE data to the API - async
+        /// </summary>
+        /// <typeparam name="T">Type of object to get back from the API</typeparam>
+        /// <param name="path">Relative url to request</param>
+        /// <param name="data">Data to send to the service</param>
+        /// <returns>Json string of the result</returns>
+        public async Task<string> DeleteAsync(string path)
+        {
+            try
+            {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(GetApiUrl(path));
+                request.ContentType = "application/json";
+                request.Method = "DELETE";
+                request.Headers.Add(HttpRequestHeader.Authorization, GetAuthorizationHeader(path, "DELETE").ToString());
+
+                using (var response = await request.GetResponseAsync().ConfigureAwait(false))
+                using (var sr = new StreamReader(response.GetResponseStream()))
+                {
+                    string result = sr.ReadToEnd();
+                    //Delete response (204) returns no content, creating a basic ApiResponse if it's the case
+                    if (string.IsNullOrEmpty(result))
+                        return JsonConvert.SerializeObject(new ApiResponse { IsSuccess = true });
+                    return result;
+                }
+            }
+            catch (WebException ex)
+            {
+                using (var er = ex.Response.GetResponseStream())
+                using (var erRs = new StreamReader(er))
+                {
+                    return erRs.ReadToEnd();
+                }
+            }
+        }
+
+        /// <summary>
+        /// DELETE data to the API - async
+        /// </summary>
+        /// <typeparam name="T">Type of object to get back from the API</typeparam>
+        /// <param name="path">Relative url to request</param>
+        /// <param name="data">Data to send to the service</param>
+        /// <returns>Typed object response</returns>
+        public async Task<T> DeleteAsync<T>(string path)
+        {
+            var requestResult = await DeleteAsync(path).ConfigureAwait(false);
+            return JsonConvert.DeserializeObject<T>(requestResult);
+        }
+        #endregion
+
+        #region User mapping
+        /// <summary>
+        /// http://docs.otohitsapi.apiary.io/#reference/endpoints/user/get-me
+        /// </summary>
+        public ApiResponse<User> GetUserInfo()
+        {
+            var user = Get<ApiResponse<User>>("/me");
+            return user;
+        }
+        #endregion
+
+        #region Instances mapping
+        /// <summary>
+        /// http://docs.otohitsapi.apiary.io/#reference/endpoints/instances/get-instances
+        /// </summary>
+        public ApiResponse<InstanceCollection> GetInstances()
+        {
+            var instances = Get<ApiResponse<InstanceCollection>>("/instances");
+            return instances;
+        }
+        #endregion
+
+        #region Links mapping
         /// <summary>
         /// http://docs.otohitsapi.apiary.io/#reference/endpoints/links/get-links
         /// </summary>
-        /// <param name="with"></param>
-        /// <returns></returns>
         public ApiResponse<List<Link>> GetLinks(string with = "")
         {
             var links = Get<ApiResponse<List<Link>>>("/links" + (!string.IsNullOrEmpty(with) ? $"?with={with}" : ""));
@@ -287,32 +513,139 @@ namespace Otohits.API
         /// <summary>
         /// http://docs.otohitsapi.apiary.io/#reference/endpoints/links/post-link
         /// </summary>
-        /// <param name="link"></param>
-        /// <returns></returns>
         public ApiResponse<PostCreateResponse> PostLink(Link link)
         {
-            var postResult = Post<ApiResponse<PostCreateResponse>>("/links", JsonConvert.SerializeObject(link));
+            var postResult = Post<ApiResponse<PostCreateResponse>>("/links", link);
             return postResult;
         }
 
         /// <summary>
-        /// http://docs.otohitsapi.apiary.io/#reference/endpoints/user/get-me
+        /// http://docs.otohitsapi.apiary.io/#reference/services/links/delete-link
         /// </summary>
-        /// <returns>User info</returns>
-        public ApiResponse<User> GetUserInfo()
+        public ApiResponse DeleteLink(int linkId)
         {
-            var user = Get<ApiResponse<User>>("/me");
-            return user;
+            var postResult = Delete<ApiResponse>("/links/" + linkId);
+            return postResult;
         }
 
         /// <summary>
-        /// http://docs.otohitsapi.apiary.io/#reference/endpoints/instances/get-instances
+        /// http://docs.otohitsapi.apiary.io/#reference/services/links/put-timers
         /// </summary>
-        /// <returns>Running and inactive instances</returns>
-        public ApiResponse<InstanceCollection> GetInstances()
+        public ApiResponse UpdateLinksTimers(LinksTimersRequestModel data)
         {
-            var instances = Get<ApiResponse<InstanceCollection>>("/instances");
-            return instances;
+            var updateResponse = Put<ApiResponse>("/links/timers", data);
+            return updateResponse;
         }
+
+        /// <summary>
+        /// http://docs.otohitsapi.apiary.io/#reference/services/links/put-points
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public ApiResponse AddPointsToLinks(LinksPointsRequestModel data)
+        {
+            var updateResponse = Put<ApiResponse>("/links/points", data);
+            return updateResponse;
+        }
+
+        /// <summary>
+        /// http://docs.otohitsapi.apiary.io/#reference/services/links/put-geotargeting
+        /// </summary>
+        public ApiResponse UpdateLinksGeoTargeting(LinksGeoTargetingRequestModel data)
+        {
+            var updateResponse = Put<ApiResponse>("/links/geotargeting", data);
+            return updateResponse;
+        }
+
+        /// <summary>
+        /// http://docs.otohitsapi.apiary.io/#reference/services/links/put-clicks
+        /// </summary>
+        public ApiResponse UpdateLinksClicks(LinksClicksRequestModel data)
+        {
+            var updateResponse = Put<ApiResponse>("/links/clicks", data);
+            return updateResponse;
+        }
+
+        /// <summary>
+        /// http://docs.otohitsapi.apiary.io/#reference/services/links/put-scroll
+        /// </summary>
+        public ApiResponse UpdateLinksScroll(LinksSwitchRequestModel data)
+        {
+            var updateResponse = Put<ApiResponse>("/links/scroll", data);
+            return updateResponse;
+        }
+
+        /// <summary>
+        /// http://docs.otohitsapi.apiary.io/#reference/services/links/put-apponly
+        /// </summary>
+        public ApiResponse UpdateLinksAppOnly(LinksSwitchRequestModel data)
+        {
+            var updateResponse = Put<ApiResponse>("/links/apponly", data);
+            return updateResponse;
+        }
+
+        /// <summary>
+        /// http://docs.otohitsapi.apiary.io/#reference/services/links/put-user-agents
+        /// </summary>
+        public ApiResponse UpdateLinksUserAgents(LinksUserAgentsRequestModel data)
+        {
+            var updateResponse = Put<ApiResponse>("/links/useragents", data);
+            return updateResponse;
+        }
+
+        /// <summary>
+        /// http://docs.otohitsapi.apiary.io/#reference/services/links/put-referers
+        /// </summary>
+        public ApiResponse UpdateLinksReferers(LinksReferersRequestModel data)
+        {
+            var updateResponse = Put<ApiResponse>("/links/referers", data);
+            return updateResponse;
+        }
+
+        /// <summary>
+        /// http://docs.otohitsapi.apiary.io/#reference/services/links/put-throttling
+        /// </summary>
+        public ApiResponse UpdateLinksThrottling(LinksThrottlingRequestModel data)
+        {
+            var updateResponse = Put<ApiResponse>("/links/throttling", data);
+            return updateResponse;
+        }
+
+        /// <summary>
+        /// http://docs.otohitsapi.apiary.io/#reference/services/links/put-pause-link
+        /// </summary>
+        public ApiResponse PauseLinks(LinksBaseRequestModel data)
+        {
+            var updateResponse = Put<ApiResponse>("/links/pause", data);
+            return updateResponse;
+        }
+
+        /// <summary>
+        /// http://docs.otohitsapi.apiary.io/#reference/services/links/put-start-link
+        /// </summary>
+        public ApiResponse StartLinks(LinksBaseRequestModel data)
+        {
+            var updateResponse = Put<ApiResponse>("/links/start", data);
+            return updateResponse;
+        }
+
+        /// <summary>
+        /// http://docs.otohitsapi.apiary.io/#reference/services/links/put-reclaim-points-on-link
+        /// </summary>
+        public ApiResponse ReclaimPointsOnLinks(LinksBaseRequestModel data)
+        {
+            var updateResponse = Put<ApiResponse>("/links/reclaim", data);
+            return updateResponse;
+        }
+
+        /// <summary>
+        /// http://docs.otohitsapi.apiary.io/#reference/services/links/put-name
+        /// </summary>
+        public ApiResponse UpdateLinksName(LinksValueRequestModel data)
+        {
+            var updateResponse = Put<ApiResponse>("/links/name", data);
+            return updateResponse;
+        }
+        #endregion
     }
 }

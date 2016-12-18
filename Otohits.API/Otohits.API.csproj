@@ -45,15 +45,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\ApiResponse.cs" />
-    <Compile Include="Entities\ClicksConfiguration.cs" />
-    <Compile Include="Entities\InstanceCollection.cs" />
-    <Compile Include="Entities\Link.cs" />
+    <Compile Include="Entities\LinksThrottlingRequestModel.cs" />
+    <Compile Include="Entities\LinksValueRequestModel.cs" />
+    <Compile Include="Entities\Links\ClicksConfiguration.cs" />
+    <Compile Include="Entities\Instances\InstanceCollection.cs" />
+    <Compile Include="Entities\Links\Link.cs" />
+    <Compile Include="Entities\Links\LinksBaseRequestModel.cs" />
+    <Compile Include="Entities\Links\LinksClicksRequestModel.cs" />
+    <Compile Include="Entities\Links\LinksGeoTargetingRequestModel.cs" />
+    <Compile Include="Entities\Links\LinksPointsRequestModel.cs" />
+    <Compile Include="Entities\Links\LinksReferersRequestModel.cs" />
+    <Compile Include="Entities\Links\LinksSwitchRequestModel.cs" />
+    <Compile Include="Entities\Links\LinksTimersRequestModel.cs" />
+    <Compile Include="Entities\Links\LinksUserAgentsRequestModel.cs" />
     <Compile Include="Entities\OtohitsApiCredentials.cs" />
     <Compile Include="Entities\PostCreateResponse.cs" />
-    <Compile Include="Entities\Referer.cs" />
-    <Compile Include="Entities\Throttling.cs" />
-    <Compile Include="Entities\User.cs" />
-    <Compile Include="Entities\UserAgent.cs" />
+    <Compile Include="Entities\Links\Referer.cs" />
+    <Compile Include="Entities\Links\Throttling.cs" />
+    <Compile Include="Entities\User\User.cs" />
+    <Compile Include="Entities\Links\UserAgent.cs" />
     <Compile Include="Models\OtohitsRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
+using Otohits.API.Entities;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 
 namespace Otohits.API.TestConsole

@@ -24,6 +24,12 @@ namespace Otohits.API.Entities
             for (int i = 0; i < 24; i++)
                 Add(i, new ThrottlingHourPlan { Min = defaultValue, Max = defaultValue });
         }
+
+        public ThrottlingPlan(int min, int max)
+        {
+            for (int i = 0; i < 24; i++)
+                Add(i, new ThrottlingHourPlan { Min = min, Max = max });
+        }
     }
 
     public class ThrottlingHourPlan
