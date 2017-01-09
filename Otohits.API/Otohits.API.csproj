@@ -62,6 +62,11 @@
     <Compile Include="Entities\PostCreateResponse.cs" />
     <Compile Include="Entities\Links\Referer.cs" />
     <Compile Include="Entities\Links\Throttling.cs" />
+    <Compile Include="Entities\Statistics\AllLinksStats.cs" />
+    <Compile Include="Entities\Statistics\VisitStats.cs" />
+    <Compile Include="Entities\Statistics\LinkStats.cs" />
+    <Compile Include="Entities\Statistics\StatsPeriod.cs" />
+    <Compile Include="Entities\Statistics\VisitsStats.cs" />
     <Compile Include="Entities\User\User.cs" />
     <Compile Include="Entities\Links\UserAgent.cs" />
     <Compile Include="Models\OtohitsRequest.cs" />

@@ -647,5 +647,25 @@ namespace Otohits.API
             return updateResponse;
         }
         #endregion
+
+        #region Stats mapping
+        /// <summary>
+        /// http://docs.otohitsapi.apiary.io/#reference/services/statistics/get-all-links-stats
+        /// </summary>
+        public ApiResponse GetLinksStats(StatsPeriod? period = null)
+        {
+            var stats = Get<ApiResponse<AllLinksStats>>($"/links/stats{(period != null ? "/" + period.Value.ToString().ToLower() : "")}");
+            return stats;
+        }
+
+        /// <summary>
+        /// http://docs.otohitsapi.apiary.io/#reference/services/statistics/get-link-stats
+        /// </summary>
+        public ApiResponse GetLinkStats(int linkId, StatsPeriod? period = null)
+        {
+            var stats = Get<ApiResponse<LinkStats>>($"/links/{linkId}/stats{(period != null ? "/" + period.Value.ToString().ToLower() : "")}");
+            return stats;
+        }
+        #endregion
     }
 }
